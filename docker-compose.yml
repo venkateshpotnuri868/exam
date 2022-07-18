@@ -1,0 +1,62 @@
+version: "3"
+
+services:
+  sonarqube:
+    image: sonarqube:9.0.1-community
+    privileged: true
+    expose:
+      - 9019
+    ports:
+      - "9019:9000"
+    networks:
+      - sonarnet
+    environment:
+      - sonar.jdbc.url=jdbc:postgresql://db:5432/sonar
+      - sonar.jdbc.username=sonar
+      - sonar.jdbc.password=sonar
+    volumes:
+      - sonarqube_conf:/opt/sonarqube/conf
+      - sonarqube_data:/opt/sonarqube/data
+      - sonarqube_extensions:/opt/sonarqube/extensions
+      - sonarqube_bundled-plugins:/opt/sonarqube/lib/bundled-plugins
+
+  db:
+    image: postgres:13.4
+    networks:
+      - sonarnet
+    environment:
+      - POSTGRES_USER=sonar
+      - POSTGRES_PASSWORD=sonar
+    volumes:
+      - postgresql:/var/lib/postgresql
+      - postgresql_data:/var/lib/postgresql/data
+  java:
+    image: openjdk:8
+    container_name: "myapp2"
+    ports:
+      - 7899:8080
+    environment:
+      - JAVA_OPTS=""
+    volumes:
+      - "/var/lib/jenkins/workspace/examp/target/docker-java-app-example.jar:/docker-java-app-example.jar"
+    command: ['java', '-jar', 'docker-java-app-example.jar']
+  sonarscanner:
+    mvn sonar:sonar \
+  -Dsonar.projectKey=dockersonarqube \
+  -Dsonar.host.url=http://10.11.0.174:9019 \
+  -Dsonar.login=590e97d60f6ab68f10034856c84a8e4e0478eab7
+  -Dsonar.test.inclusions=**/*test*/**
+    networks:
+      - sonarnet
+    volumes:
+      - ./:/usr/src
+networks:
+  sonarnet:
+
+volumes:
+  sonarqube_conf:
+  sonarqube_data:
+  sonarqube_extensions:
+  sonarqube_bundled-plugins:
+  postgresql:
+  postgresql_data:
