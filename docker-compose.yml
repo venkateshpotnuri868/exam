@@ -41,7 +41,8 @@ services:
       - "/var/lib/jenkins/workspace/examp/target/docker-java-app-example.jar:/docker-java-app-example.jar"
     command: ['java', '-jar', 'docker-java-app-example.jar']
   sonarscanner:
-    mvn sonar:sonar \
+    mvn clean compile \
+    sonar:sonar \
   -Dsonar.projectKey=dockersonarqube \
   -Dsonar.host.url=http://10.11.0.174:9019 \
   -Dsonar.login=590e97d60f6ab68f10034856c84a8e4e0478eab7
