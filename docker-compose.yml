@@ -5,7 +5,7 @@ services:
     image: sonarqube:9.0.1-community
     privileged: true
     expose:
-      - 9019
+      - 5019
     ports:
       - "9019:9000"
     networks:
@@ -34,7 +34,7 @@ services:
     image: openjdk:8
     container_name: "myapp2"
     ports:
-      - 7899:8080
+      - 5899:8080
     environment:
       - JAVA_OPTS=""
     volumes:
