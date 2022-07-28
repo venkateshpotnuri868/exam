@@ -41,7 +41,7 @@ services:
       - "/var/lib/jenkins/workspace/examp/target/docker-java-app-example.jar:/docker-java-app-example.jar"
     command: ['java', '-jar', 'docker-java-app-example.jar']
   sonarscanner:
-    container_name: sonarscanner
+    container_name: sonarscanner1
     image: newtmitch/sonar-scanner
     networks:
       - sonarnet
